@@ -8,7 +8,11 @@ export class FilesService {
 
   async createFile(file): Promise<string> {
     try {
-      const fileName = randomUUID() + ".jpg";
+
+      const fileExtension = file.originalname.split(".").pop();
+      //const fileExtension: string = path.parse(file.originalname).ext;
+      //const fileExtension: string = path.extname(file.originalname);
+      const fileName = randomUUID() + "." + fileExtension;
       //const filePath = join(__dirname, "..", "upload");
       const filePath = join(process.cwd(), "upload");
       if (!fs.existsSync(filePath)) {
