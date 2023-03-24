@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from "@nestjs/common";
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { SequelizeModule } from "@nestjs/sequelize";
@@ -16,4 +16,8 @@ import { AuthModule } from "../auth/auth.module";
   ],
   exports:[UsersService]
 })
-export class UsersModule {}
+export class UsersModule implements  OnModuleInit{
+  onModuleInit(): any {
+    console.log("UsersModule init");
+  }
+}
