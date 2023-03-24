@@ -1,4 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
+import { CreatePostDto } from "./dto/create-post.dto";
+import { Post } from "./posts.model";
+import { FilesService } from "../files/files.service";
 
 @Injectable()
-export class PostsService {}
+export class PostsService {
+
+  constructor(@InjectModel(Post) private postRepository: typeof Post,
+              private fileService: FilesService
+  ) {
+  }
+
+  async create(userId: number, dto: CreatePostDto, image: any) {
+    const fileName = await this.fileService.createFile(image);
+    return await this.postRepository.create({ ...dto, userId, image: fileName });
+  }
+
+
+}

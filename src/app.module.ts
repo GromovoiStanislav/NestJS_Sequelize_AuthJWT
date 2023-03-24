@@ -8,6 +8,10 @@ import { Role } from "./roles/roles.model";
 import { UserRoles } from "./roles/user-roles.model";
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
+import { Post } from "./posts/posts.model";
+import { FilesModule } from './files/files.module';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "node:path";
 
 @Module({
   controllers: [],
@@ -16,6 +20,11 @@ import { PostsModule } from './posts/posts.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ServeStaticModule.forRoot({
+      //rootPath: join( __dirname,'..', 'upload'),
+      rootPath: join(process.cwd(), 'upload'),
+      serveRoot:"/static"
+    }),
     SequelizeModule.forRoot({
       dialect: "postgres",
       host: "127.0.0.1",//process.env.POSTGRES_HOST,
@@ -23,7 +32,7 @@ import { PostsModule } from './posts/posts.module';
       username: "postgres",//process.env.POSTGRES_USER,
       password: "root",//process.env.POSTGRESS_PASSWORD,
       database: "db",//process.env.POSTGRES_DB,
-      models: [User, Role, UserRoles],
+      models: [User, Role, UserRoles, Post],
       autoLoadModels: true,
       logging: false
     }),
@@ -31,6 +40,7 @@ import { PostsModule } from './posts/posts.module';
     RolesModule,
     AuthModule,
     PostsModule,
+    FilesModule,
   ]
 })
 export class AppModule {
