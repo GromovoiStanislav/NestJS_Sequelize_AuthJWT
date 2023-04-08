@@ -1,2 +1,2 @@
-## NestJS - Blog Project
-NestJS with Sequelize and files-upload
+## NestJS with Sequelize, Authorization and files-upload
+NestJS - Blog Project

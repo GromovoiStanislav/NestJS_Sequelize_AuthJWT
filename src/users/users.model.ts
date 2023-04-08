@@ -35,6 +35,9 @@ export class User extends Model<User, UserCreationAttrs> {
   @BelongsToMany(() => Role, () => UserRoles)
   roles: Role[];
 
+  @Column({ defaultValue: true })
+  isActive: boolean;
+
   @HasMany(() => Post)
   posts: Post[];
 

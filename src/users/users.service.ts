@@ -10,14 +10,15 @@ import { BanUserDto } from "./dto/ban-user.dto";
 export class UsersService {
 
   constructor(@InjectModel(User) private userRepository: typeof User,
-              private roleService: RolesService) {}
+              private roleService: RolesService) {
+  }
 
 
   async createUser(dto: CreateUserDto) {
     const user = await this.userRepository.create(dto);
-    const role = await this.roleService.getRoleByValue("USER")
-    await user.$set('roles', [role.id])
-    user.roles = [role]
+    const role = await this.roleService.getRoleByValue("USER");
+    await user.$set("roles", [role.id]);
+    user.roles = [role];
     return user;
   }
 
@@ -29,7 +30,7 @@ export class UsersService {
 
 
   async getUserById(id: number) {
-    return await this.userRepository.findByPk(id , {include: { all: true  }});
+    return await this.userRepository.findByPk(id, { include: { all: true } });
   }
 
 
@@ -42,22 +43,32 @@ export class UsersService {
     const user = await this.userRepository.findByPk(dto.userId);
     const role = await this.roleService.getRoleByValue(dto.role);
     if (role && user) {
-      await user.$add('role', role.id);
+      await user.$add("role", role.id);
       return dto;
     }
-    throw new NotFoundException('Пользователь или роль не найдены');
+    throw new NotFoundException("Пользователь или роль не найдены");
   }
 
 
   async ban(dto: BanUserDto) {
     const user = await this.userRepository.findByPk(dto.userId);
     if (!user) {
-      throw new NotFoundException('Пользователь не найден');
+      throw new NotFoundException("Пользователь не найден");
     }
     user.banned = true;
     user.banReason = dto.banReason;
     await user.save();
     return user;
+  }
+
+  async remove(id: number): Promise<User> {
+    //const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findByPk(id);
+    if (!user) {
+      throw new NotFoundException("Пользователь не найден");
+    }
+    await user.destroy();
+    return user
   }
 
 }
